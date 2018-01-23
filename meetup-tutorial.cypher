@@ -1,4 +1,7 @@
+
+//////////////////////////
 // Query di riscaldamento:
+//////////////////////////
 
 // Get all users in the dataset
 MATCH (u:User)
@@ -8,16 +11,23 @@ RETURN u
 MATCH (m:Meetup)
 RETURN m
 
-// Show Meetups e Tags (da ricontrollare)
+// Show Meetups e Tags
 MATCH (m:Meetup)-[r:TAGGED]->(t:Tag)
-return m, r, t;
+RETURN m, r, t
+
+// Show relations for a specific User
+MATCH (u:User {name:"<insert user name>"})-[r]->(o)
+RETURN u, r, o
 
 // Get all users who joined a Meetup after 1 November 2017
 MATCH (u:User)-[r:JOINED]->(m:Meetup)
-WHERE r.timestamp > apoc.date.parse('01/11/2017', 'ms', 'dd/MM/yyyy')
+WHERE r.when > apoc.date.parse('01/11/2017', 'ms', 'dd/MM/yyyy')
 RETURN u, r, m
 
+
+//////////////////
 // Query avanzate:
+//////////////////
 
 // Schema:
 CALL db.schema();
@@ -45,9 +55,13 @@ RETURN u.name, interests
 LIMIT 10
 
 // Shortest path Eros -> Piero
-// TODO
+MATCH (u1:User {name:"Piero S."}), (u2:User {name:"Eros B."}), p=shortestPath( (u1)-[*]-(u2)  )
+RETURN u1, u2, p
 
+
+/////////////////////////
 // Query raccomandazione:
+/////////////////////////
 
 // Prendere colleghi di Eros
 // Prendere "meetup" frequentati dai colleghi di Eros
