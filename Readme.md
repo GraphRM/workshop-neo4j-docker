@@ -33,7 +33,7 @@ All'interno della cartella `import` è presente un file `meetup.cypher` contenen
 
 ```sh
 $ docker-compose exec neo4j bash
-# ... entriamo nel container docker
+# ... entriamo nel container docker (usare al posto di graphrm qui la password impostata sopra)
 docker$  ./bin/neo4j-shell -u neo4j -p graphrm < '/import/meetup.cypher' > '/import/output.log'
 # ... attendere un paio di minuti
 docker$ exit

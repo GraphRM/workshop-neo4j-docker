@@ -9,7 +9,8 @@ services:
     environment:
       - NEO4J_dbms_security_procedures_unrestricted=apoc.*
       - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_shell_enabled=true
     volumes:
-      - $PWD/plugins:/plugins
-      - $PWD/data:/data
-      - $PWD/import:/import
+      - ./plugins:/plugins
+      - ./data:/data
+      - ./import:/import
