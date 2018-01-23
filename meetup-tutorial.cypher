@@ -39,7 +39,6 @@ ORDER BY degree DESC
 RETURN m.name, degree
 LIMIT 5
 
-
 // Show top 10 active users by partecipation
 MATCH (u:User)
 WITH u, size((u)-[:JOINED]->(:Meetup)) as degree
@@ -66,7 +65,6 @@ RETURN u1, u2, p
 // Prendere colleghi di Eros
 // Prendere "meetup" frequentati dai colleghi di Eros
 // Rimuovere "meetup" già frequentati da Eros
-
 MATCH (eros:User {name: "Eros B."}),
       (eros)-[:JOINED]->(:Meetup)<-[:JOINED]-(colleague:User),
       (colleague)-[:JOINED]->(newMeetup:Meetup)
@@ -75,11 +73,17 @@ RETURN newMeetup.name, collect(distinct colleague.name) AS joiners, count(distin
 ORDER BY occurrences DESC;
 
 // Raccomandazioni by topic
-// TODO
-				   
-//				   
+MATCH (eros:User {name:"Eros B."}),
+	  (eros)-[:JOINED]->(meetup:Meetup),
+      (meetup:Meetup)-[:TAGGED]->(tag:Tag)<-[:TAGGED]-(newMeetup:Meetup)
+WHERE NOT (eros)-[:JOINED]->(newMeetup)
+RETURN eros, meetup, tag, newMeetup
+
+
+///////////////////////				   
 // Funzioni di supporto
-//
+///////////////////////
+
 // Export the graph as Cypher query to a file
 CALL apoc.export.cypher.all('/tmp/meetup.cypher', {format: 'cypher-shell'})
 
