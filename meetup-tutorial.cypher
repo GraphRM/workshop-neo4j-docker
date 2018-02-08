@@ -94,7 +94,7 @@ MATCH ()-[r]-() DELETE r
 MATCH (n) DELETE n
 
 // Import all Meetup data from our proxy
-WITH "https://meetup-proxy-dhzneqhyzi.now.sh/membership?meetups=GraphRM,RomaJS,Rust-Roma,Lambda-Roma,Blockchain-Roma,Machine-Learning-Data-Science-Meetup,DotNetCode,RomaWordPress,Agile_Talks" AS url
+WITH "https://meetup-proxy-zthscriext.now.sh/membership?meetups=GraphRM,RomaJS,Rust-Roma,Lambda-Roma,Blockchain-Roma,Machine-Learning-Data-Science-Meetup,DotNetCode,RomaWordPress,Agile_Talks" AS url
 CALL apoc.load.json(url) YIELD value
 UNWIND value.items AS e
 
@@ -117,3 +117,30 @@ FOREACH (tagName IN e.meetup.topics |
 	MERGE (tag:Tag {id: tagName.id, name: tagName.name}) 
     MERGE (meetup)-[:TAGGED]->(tag)
 )
+
+
+// Import all Meetup event from our proxy
+WITH "https://meetup-proxy-zthscriext.now.sh/attendance?meetups=GraphRM,RomaJS,Rust-Roma,Lambda-Roma,Blockchain-Roma,Machine-Learning-Data-Science-Meetup,DotNetCode,RomaWordPress,Agile_Talks" AS url
+CALL apoc.load.json(url) YIELD value
+UNWIND value.items AS e
+
+MERGE (event:Event {id:e.event.id})
+	ON CREATE SET 
+  		event.name = e.event.name,
+        event.local_date = e.event.local_date,
+        event.local_time = e.event.local_time,
+        event.time = e.event.time,
+        event.description = e.event.description , 
+        event.link = e.event.link
+
+MERGE (user:User {id:e.member.id})
+	ON CREATE SET 
+    	user.name = e.member.name
+
+MERGE (meetup:Meetup {id:e.meetupId}) 
+
+MERGE (meetup)-[:HAS_EVENT]->(event)
+MERGE (user)-[:PARTICIPATED]->(event)
+
+   
+    
