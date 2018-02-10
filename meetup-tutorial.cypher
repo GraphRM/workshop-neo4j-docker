@@ -188,3 +188,12 @@ WITH m,e,SIZE(()-[:PARTICIPATED]->(e)) as participants
 WHERE m.name ="GraphRM"
 return m.name,participants,e.local_date
 ORDER BY m.name ASC,e.time
+
+
+// Show Users that joined a meetup 7 days before the next event but didn't go
+
+MATCH(u:User)-[j:JOINED]->(m:Meetup)
+	,(m)-[:HAS_EVENT]->(e:Event)
+where NOT (u)-[:PARTICIPATED]-(e) and (e.time - j.when) > 0 AND (e.time - j.when)/ (60*60*24) < 7
+return u.name,m.name,(e.time - j.when)/ (1000* 60*60*24) as days
+ORDER BY m.name,u.name, days
