@@ -142,5 +142,40 @@ MERGE (meetup:Meetup {id:e.meetupId})
 MERGE (meetup)-[:HAS_EVENT]->(event)
 MERGE (user)-[:PARTICIPATED]->(event)
 
-   
-    
+// More queries with single events and partecipation
+
+
+
+// Show top 5 Meetups Events by popularity
+MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event) 
+WITH m,e, size(()-[:PARTICIPATED]->(e)) as degree
+ORDER BY degree DESC
+RETURN m.name,e.name, degree
+LIMIT 5
+
+
+// Show top 10 active users by partecipation to events
+
+MATCH (u:User)
+WITH u, size((u)-[:PARTICIPATED]->(:Event)) as degree
+ORDER BY degree DESC
+RETURN u.name, degree
+LIMIT 10
+
+
+// Show users that without events
+
+MATCH (n:User)
+WITH n,size((n)-[:PARTICIPATED]->(:Event)) as rel_count
+WHERE rel_count = 0
+return n.name
+limit 5
+
+
+// Show missing event for Enrico R.
+
+MATCH (n:User)-[:JOINED]->(m:Meetup),
+		(m)-[:HAS_EVENT]->(e:Event)
+WHERE NOT (n)-[:PARTICIPATED]->(e) AND n.name = "Enrico R."
+return n.name,m.name,e.name
+limit 40
