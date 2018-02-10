@@ -145,7 +145,6 @@ MERGE (user)-[:PARTICIPATED]->(event)
 // More queries with single events and partecipation
 
 
-
 // Show top 5 Meetups Events by popularity
 MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event) 
 WITH m,e, size(()-[:PARTICIPATED]->(e)) as degree
@@ -179,3 +178,13 @@ MATCH (n:User)-[:JOINED]->(m:Meetup),
 WHERE NOT (n)-[:PARTICIPATED]->(e) AND n.name = "Enrico R."
 return n.name,m.name,e.name
 limit 40
+
+
+// Show GraphRM meetup trends 
+
+
+MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event)
+WITH m,e,SIZE(()-[:PARTICIPATED]->(e)) as participants
+WHERE m.name ="GraphRM"
+return m.name,participants,e.local_date
+ORDER BY m.name ASC,e.time
