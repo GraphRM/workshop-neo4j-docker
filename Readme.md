@@ -1,6 +1,6 @@
-### Neo4J docker image per GraphRM workshop 25/1/2018
+### Neo4J docker image per GraphRM workshop su community #Aperitech
 
-Questa immagine docker è stata pensata per il workshop GraphRM del 25/1/2018.
+Questa immagine docker è stata pensata per il workshop GraphRM sulle community #Aperitech a ROMA..
 
 In questo repository potete trovare una configurazione docker per avviare Neo4J e caricare i dati del workshop senza troppi problemi.
 
