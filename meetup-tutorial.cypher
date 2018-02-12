@@ -201,7 +201,11 @@ ORDER BY m.name,u.name, days
 
 // Show Users that joined a meetup but never partecipated to an event
 
-
+MATCH (u:User)-[j:JOINED]->(m:Meetup),
+	 (m)-[:HAS_EVENT]->(e:Event)
+WITH u, m, COLLECT(e) AS events
+WHERE ALL(e IN events WHERE NOT (u)-[:PARTICIPATED]-(e))
+RETURN u, m
 
 // Show Users who changed their interest during the years
 
