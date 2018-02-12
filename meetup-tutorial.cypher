@@ -195,7 +195,7 @@ ORDER BY m.name ASC,e.time
 
 MATCH(u:User)-[j:JOINED]->(m:Meetup),
 	 (m)-[:HAS_EVENT]->(e:Event)
-WHERE NOT (u)-[:PARTICIPATED]-(e) and (e.time - j.when) > 0 AND (e.time - j.when)/ (60*60*24) < 7
+WHERE NOT (u)-[:PARTICIPATED]-(e) and (e.time - j.when) > 0 AND (e.time - j.when)/ (1000*60*60*24) < 7
 RETURN u.name,m.name,(e.time - j.when)/ (1000* 60*60*24) as days
 ORDER BY m.name,u.name, days
 
