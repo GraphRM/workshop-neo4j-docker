@@ -29,6 +29,26 @@ Le credenziali per l'istanza sono quelle di default (`neo4j/neo4j`), verrà ad o
 
 ## Caricamento dati
 
+# Metodo rapido
+
+All'interno della cartella `import` è presente un file `meetups.dump` contenente il dataset seriale che verrà utilizzato durante il corso del workshop.
+
+Spengere l'immagine docker e caricare i dati via `neo4j-admin`:
+
+```sh
+$ docker-compose stop
+...
+$ docker-compose run neo4j bash
+docker$ ./bin/neo4j-admin dump --database=graph.db --to=/import/meetups.dump
+... dopo 5 secondi ...
+docker$ exit
+$ docker-compose up -d
+```
+
+A questo punto andare su `localhost:7474` con il proprio browser e navigare il nuovo dataset.
+
+# Metodo più lungo
+
 All'interno della cartella `import` è presente un file `meetup.cypher` contenente il dataset che verrà utilizzato durante il corso del workshop. Per caricare questo dataset è necessario eseguire i seguenti comandi:
 
 ```sh

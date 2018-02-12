@@ -6,7 +6,7 @@
 // Get all users in the dataset
 MATCH (u:User)
 RETURN u
-	   
+
 // Get all Meetups in the dataset
 MATCH (m:Meetup)
 RETURN m
@@ -80,7 +80,7 @@ WHERE NOT (eros)-[:JOINED]->(newMeetup)
 RETURN eros, meetup, tag, newMeetup
 
 
-///////////////////////				   
+///////////////////////
 // Funzioni di supporto
 ///////////////////////
 
@@ -99,22 +99,22 @@ CALL apoc.load.json(url) YIELD value
 UNWIND value.items AS e
 
 MERGE (meetup:Meetup {id:e.meetup.id})
-	ON CREATE SET 
+	ON CREATE SET
   		meetup.name = e.meetup.name,
         meetup.link = e.meetup.link
 
 MERGE (user:User {id:e.member.id})
-	ON CREATE SET 
+	ON CREATE SET
     	user.name = e.member.name,
         user.status = e.member.status
-        
+
 MERGE (user)-[:JOINED {as: e.meetup.who, when: e.member.joined}]->(meetup)
 
 MERGE (organizer:User {id: e.meetup.organizer.id})
 MERGE (organizer)-[:CREATED {when: e.meetup.created}]->(meetup)
 
-FOREACH (tagName IN e.meetup.topics | 
-	MERGE (tag:Tag {id: tagName.id, name: tagName.name}) 
+FOREACH (tagName IN e.meetup.topics |
+	MERGE (tag:Tag {id: tagName.id, name: tagName.name})
     MERGE (meetup)-[:TAGGED]->(tag)
 )
 
@@ -125,28 +125,30 @@ CALL apoc.load.json(url) YIELD value
 UNWIND value.items AS e
 
 MERGE (event:Event {id:e.event.id})
-	ON CREATE SET 
+	ON CREATE SET
   		event.name = e.event.name,
         event.local_date = e.event.local_date,
         event.local_time = e.event.local_time,
         event.time = e.event.time,
-        event.description = e.event.description , 
+        event.description = e.event.description ,
         event.link = e.event.link
 
 MERGE (user:User {id:e.member.id})
-	ON CREATE SET 
+	ON CREATE SET
     	user.name = e.member.name
 
-MERGE (meetup:Meetup {id:e.meetupId}) 
+MERGE (meetup:Meetup {id:e.meetupId})
 
 MERGE (meetup)-[:HAS_EVENT]->(event)
 MERGE (user)-[:PARTICIPATED]->(event)
 
+// Test for duplicates
+MATCH (n1:Meetup) WHERE NOT (n1)-[:HAS_EVENT]->() RETURN n1
+
 // More queries with single events and partecipation
 
-
 // Show top 5 Meetups Events by popularity
-MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event) 
+MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event)
 WITH m,e, size(()-[:PARTICIPATED]->(e)) as degree
 ORDER BY degree DESC
 RETURN m.name,e.name, degree
@@ -162,12 +164,12 @@ RETURN u.name, degree
 LIMIT 10
 
 
-// Show users that without events
+// Show users with no events
 
 MATCH (n:User)
 WITH n,size((n)-[:PARTICIPATED]->(:Event)) as rel_count
 WHERE rel_count = 0
-return n.name
+RETURN n.name
 limit 5
 
 
@@ -176,24 +178,30 @@ limit 5
 MATCH (n:User)-[:JOINED]->(m:Meetup),
 		(m)-[:HAS_EVENT]->(e:Event)
 WHERE NOT (n)-[:PARTICIPATED]->(e) AND n.name = "Enrico R."
-return n.name,m.name,e.name
+RETURN n.name,m.name,e.name
 limit 40
 
 
-// Show GraphRM meetup trends 
-
+// Show GraphRM meetup trends
 
 MATCH (m:Meetup)-[:HAS_EVENT]->(e:Event)
 WITH m,e,SIZE(()-[:PARTICIPATED]->(e)) as participants
 WHERE m.name ="GraphRM"
-return m.name,participants,e.local_date
+RETURN m.name,participants,e.local_date
 ORDER BY m.name ASC,e.time
 
 
 // Show Users that joined a meetup 7 days before the next event but didn't go
 
-MATCH(u:User)-[j:JOINED]->(m:Meetup)
-	,(m)-[:HAS_EVENT]->(e:Event)
-where NOT (u)-[:PARTICIPATED]-(e) and (e.time - j.when) > 0 AND (e.time - j.when)/ (60*60*24) < 7
-return u.name,m.name,(e.time - j.when)/ (1000* 60*60*24) as days
+MATCH(u:User)-[j:JOINED]->(m:Meetup),
+	 (m)-[:HAS_EVENT]->(e:Event)
+WHERE NOT (u)-[:PARTICIPATED]-(e) and (e.time - j.when) > 0 AND (e.time - j.when)/ (60*60*24) < 7
+RETURN u.name,m.name,(e.time - j.when)/ (1000* 60*60*24) as days
 ORDER BY m.name,u.name, days
+
+// Show Users that joined a meetup but never partecipated to an event
+
+
+
+// Show Users who changed their interest during the years
+
