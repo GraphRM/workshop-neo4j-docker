@@ -1,8 +1,15 @@
-### Neo4J docker image per GraphRM workshop su community #Aperitech
+# GraphRM workshop su community #Aperitech
 
-Questa immagine docker è stata pensata per il workshop GraphRM sulle community #Aperitech a ROMA..
+Questa immagine docker è stata pensata per il workshop GraphRM sulle community #Aperitech a ROMA.
 
-In questo repository potete trovare una configurazione docker per avviare Neo4J e caricare i dati del workshop senza troppi problemi.
+## Materiale del workshop
+
+1. [Introduzione a Neo4J + costruire un motore di raccomandazione](https://www.slideshare.net/GraphRM/costruiamo-un-motore-di-raccomandazione-con-neo4j-workshop-2512018)
+2. [Analytics sulla Community #Aperitech](https://www.slideshare.net/GraphRM/analytics-sulla-community-aperitech-workshop-1222018)
+
+### Contenuto repository
+
+In questo repository potete trovare una configurazione docker per avviare Neo4J, oltre alle istruzioni per caricare i dati del workshop senza troppi problemi.
 
 La configurazione di questa istanza docker contiene:
 
@@ -15,6 +22,7 @@ La configurazione di questa istanza docker contiene:
 ### Requisiti
 
 * Docker 1.7 o superiori
+* oppure Neo4J Desktop
 
 ## Installazione
 
