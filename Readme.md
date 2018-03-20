@@ -1,5 +1,7 @@
 # GraphRM workshop su community #Aperitech
 
+[![GraphRM chat](http://codegardenroma.herokuapp.com/badge.svg)](http://codegardenroma.herokuapp.com/)
+
 Questa immagine docker è stata pensata per il workshop GraphRM sulle community #Aperitech a ROMA.
 
 ## Materiale del workshop
